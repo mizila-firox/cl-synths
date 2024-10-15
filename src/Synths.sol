@@ -5,6 +5,7 @@ import {SourceCode} from "./source/SourceCode.sol";
 import {FunctionsRequest} from "lib/chainlink/contracts/src/v0.8/functions/v1_0_0/libraries/FunctionsRequest.sol";
 import {FunctionsClient} from "lib/chainlink/contracts/src/v0.8/functions/v1_0_0/FunctionsClient.sol";
 import {IERC20} from "lib/forge-std/src/interfaces/IERC20.sol";
+import {Strings} from "lib/chainlink/contracts/src/v0.8/vendor/openzeppelin-solidity/v4.8.3/contracts/utils/Strings.sol";
 
 // Synths contract
 // this has Synthetics assets like stocks that is powered by Chainlink Automation and Functions
@@ -26,7 +27,8 @@ contract Synths is SourceCode, FunctionsClient {
     struct Asset {
         // string name;
         string symbol;
-        string price; // string for now, because of decimal type. later do the multiplication
+        // string price; // string for now, because of decimal type. later do the multiplication
+        uint256 price; // string for now, because of decimal type. later do the multiplication
         string updatedAt;
     }
 
@@ -78,14 +80,15 @@ contract Synths is SourceCode, FunctionsClient {
         }
         (
             string memory symbol,
-            string memory price,
+            uint256 price, // Decode price as uint256
             string memory updatedAt
-        ) = abi.decode(response, (string, string, string));
+        ) = abi.decode(response, (string, uint256, string));
 
-        // update the asset
+        // update the asset with uint256 price
         assets[symbol] = Asset({
             symbol: symbol,
-            price: price,
+            // price: Strings.toString(price), // Convert uint256 to string for storage
+            price: price, // Convert uint256 to string for storage
             updatedAt: updatedAt
         });
     }

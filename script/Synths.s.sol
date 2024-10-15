@@ -58,7 +58,19 @@ contract SynthsScript is Script {
 
         // console.logAddress(address(synths));
 
-        Synths synths = Synths(0x06d641CC46fc3C1091feD4f14Bbaf6ee39E55595);
-        synths.update("14041"); // VALE3
+        Synths synths = Synths(0xd7c15fBc007f7437440d7C3276D034336a73C473);
+        // synths.update("14041"); // VALE3
+        // synths.update("1774"); // ABEV
+
+        Synths.Asset memory asset = Synths.Asset({
+            symbol: "",
+            price: 0,
+            updatedAt: ""
+        });
+        (asset.symbol, asset.price, asset.updatedAt) = synths.assets("VALE");
+
+        console.logString(asset.symbol);
+        console.logUint(asset.price / 1e16);
+        console.logString(asset.updatedAt);
     }
 }
